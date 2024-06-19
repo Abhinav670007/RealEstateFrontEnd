@@ -6,7 +6,7 @@ function Header() {
   return (
     <div className='bg-slate-300 '>
         <div className='flex items-center justify-between max-w-6xl p-3 mx-auto'>
-            <h1 className=''>MehanEstate</h1>
+            <h1 className=''>MeDhuEstate</h1>
             <form className='bg-slate-200 p-2'>
                 <input type="text"placeholder='search...' className='bg-transparent focus:outline-none w-24 sm:w-64' />
                 <i class="fa-solid fa-magnifying-glass"></i>
