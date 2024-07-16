@@ -2,17 +2,19 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { app } from '../firebase'
-import { updateUserError, updateUserStart } from '../redux/userSlice'
-
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, updateUserError, updateUserStart, updateUserSuccess } from '../redux/userSlice'
+import { Link } from 'react-router-dom'
 function Profile() {
 
   const fileRef = useRef(null)
-  const {currentUser} = useSelector((state)=>state.user)
+  const {currentUser,loading} = useSelector((state)=>state.user)
   const [file, setfile] = useState(undefined)
   const [filepercentage, setfilePercentage] = useState(0)
   const [fileError, setfileError] = useState(false)
   const [formData, setFormData] = useState({})
+  const [UpdateSucess, setUpdateSucess] = useState(false)
 const dispatch = useDispatch()  
+console.log(currentUser);
 
   useEffect(()=>{
     if(file){
@@ -46,22 +48,42 @@ const dispatch = useDispatch()
   const handleSubmit=async(e)=>{
     e.preventDefault()
     try {
-      dispatch(updateUserStart())
+      dispatch(updateUserStart())        
       const res = await fetch(`${process.env.REACT_APP_ServerDomain}/User/update/${currentUser._id}`,{
         method:"POST",
         headers:{
-          "Content-Type" : "application/json",
+          "Content-Type" : "application/json"
         },
-        body:JSON.stringify(formData)
+        body:JSON.stringify(formData),
+        credentials: 'include'
       })
       const data = await res.json()
       if(data.sccess === false){
         dispatch(updateUserError(data.message))
       }
-      dispatch(updateUserStart(data))
+      dispatch(updateUserSuccess(data))
+      setUpdateSucess(true)
     } catch (error) {
       dispatch(updateUserError(error.message))
     }
+  }
+  const handleDeleteUser= async ()=>{
+      try {
+        dispatch(deleteUserStart())
+       const res = await fetch(`${process.env.REACT_APP_ServerDomain}/User/update/${currentUser._id}`,{
+        method:"DELETE",
+        credentials: 'include'
+      })
+      const data = res.json()
+      if(data.sccess === false){
+        dispatch(deleteUserFailure(data.message))
+        return
+      }
+         dispatch(deleteUserSuccess(data))
+        
+      } catch (error) {
+        dispatch(deleteUserFailure(error.message))
+      }
   }
  
    return (
@@ -85,17 +107,23 @@ const dispatch = useDispatch()
         </p>
       <input onChange={(e)=>setFormData({...FormData,username:e.target.value})} id='username' type="text" placeholder='username' className='border p-3 rounded-lg' defaultValue={currentUser.username}/>
       <input onChange={(e)=>setFormData({...FormData,email:e.target.value})} id='email' type="email" placeholder='email' className='border p-3 rounded-lg' defaultValue={currentUser.email}/>
-      <input onChange={(e)=>setFormData({...FormData,password:e.target.value})} id='password' type="text" placeholder='password' className='border p-3 rounded-lg' />
-      <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>Update</button>
+      <input onChange={(e)=>setFormData({...FormData,password:e.target.value})} id='password' type="password" placeholder='password' className='border p-3 rounded-lg' />
+      <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>
+        {loading?'Loadind...':'update'}
+      </button>
+      <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center' to={'/create-listing'}>Create listing</Link>
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-red-700 cursor-pointer'>
+        <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>
           Delete Account
         </span>
         <span className='text-red-700 cursor-pointer'>
           Sign Out
         </span>
       </div>
+      {/* <p className='text-red-700'>{error ?error:""}</p> */}
+      <p className='text-green-700 mt-3'>{UpdateSucess?'successfully updated!':""}</p>
+
     </div>
   )
 }
