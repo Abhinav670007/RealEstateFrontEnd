@@ -21,7 +21,8 @@ function SignIn() {
       headers:{
         "Content-Type" : "application/json"
       },
-      body:JSON.stringify(Signup)
+      body:JSON.stringify(Signup),
+       credentials: 'include'
     })
     const data = await sendData.json()
     if(data._id){
