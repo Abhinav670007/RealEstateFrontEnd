@@ -8,6 +8,7 @@ import SignUP from './pages/SignUP';
 import Header from './component/Header';
 import Privaterouter from './component/Privateroute'
 import CreateListing from './pages/CreateListing';
+import UpdateListing from './pages/UpdateListing';
 function App() {
 
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route element={<Privaterouter/>}>
       <Route path='/profile'element={<Profile/>}/>
       <Route path='/create-listing'element={<CreateListing/>}/>
+      <Route path='/update-listing/:listingId'element={<UpdateListing/>}/>
       </Route>
      </Routes>
      
