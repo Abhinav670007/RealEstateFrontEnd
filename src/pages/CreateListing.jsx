@@ -15,7 +15,7 @@ function CreateListing() {
     bedrooms: 1,
     bathrooms: 1,
     regularPrice: 50,
-    discountPrice:0,
+    discountPrice:1,
     offer: false,
     parking: false,
     furnished: false,
@@ -182,7 +182,7 @@ const storeImage = async (file)=>{
                     </div>
                     {formData.offer && (
                         <div className="flex items-center gap-2">
-                        <input onChange={handleChange} value={formData.discountPrice} type="number"id='discountPrice' min={0} max={0} required className='p-3 border border-gray-400 rounded-lg'/>
+                        <input onChange={handleChange} value={formData.discountPrice} type="number"id='discountPrice' min={10} max={100000} required className='p-3 border border-gray-400 rounded-lg'/>
                         <div className='flex flex-col items-center'>
                             <p>Discount Price</p>
                             <span className='text-sm'>$ / month</span>
