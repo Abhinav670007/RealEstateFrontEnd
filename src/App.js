@@ -10,6 +10,7 @@ import Privaterouter from './component/Privateroute'
 import CreateListing from './pages/CreateListing';
 import UpdateListing from './pages/UpdateListing';
 import Listing from './pages/Listing';
+import Search from './pages/Search';
 function App() {
 
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path='/'element={<Home/>}/>
       <Route path='/about'element={<About/>}/>
       <Route path='/signIn'element={<SignIn/>}/>
+      <Route path='/search'element={<Search/>}/>
       <Route path='/listing/:listingId'element={<Listing/>}/>
       <Route path='/signUP'element={<SignUP/>}/>
       <Route element={<Privaterouter/>}>
