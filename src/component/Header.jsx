@@ -9,7 +9,7 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate()
 
-  console.log(searchTerm);
+  // console.log('header value is',searchTerm);
   
   const handleSubmit = (e)=>{
     e.preventDefault()
@@ -20,10 +20,24 @@ function Header() {
   }
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get('searchTerm');
+    // console.log('Original urlParams:', Array.from(urlParams.entries()));
+
+    const params = Object.fromEntries(urlParams.entries());
+    // console.log('params:', params);
+
+    const normalizedParams = Object.keys(params).reduce((acc, key) => {
+      acc[key.toLowerCase()] = params[key];
+      return acc;
+    }, {});
+    // console.log('normalizedParams:', normalizedParams);
+
+    const searchTermFromUrl = normalizedParams['searchterm'];
+    // console.log('searchTermFromUrl:', searchTermFromUrl);
+
     if (searchTermFromUrl) {
       setSearchTerm(searchTermFromUrl);
     }
+
   }, [location.search]);
   return (
     <div className='bg-slate-300 '>
