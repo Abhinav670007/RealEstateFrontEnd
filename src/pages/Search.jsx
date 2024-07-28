@@ -9,93 +9,94 @@ function Search() {
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   console.log(listings);
-   const [sideBar, setSideBar] = useState({
-    SearchTerm: "",
-    type: "all",
-    parking: false,
-    furnished: false,
-    offer: false,
-    sort: 'createdAt',
-    order: 'desc',
-  });
+  const [sideBar, setSideBar] = useState({
+    SearchTerm:'',
+    type:"all",
+    parking:false,
+    furnished:false,
+    offer:false,
+    sort:'created_at',
+    order:'desc',
+  })
+// console.log(sideBar);
+useEffect(() => {
+const urlParams = new URLSearchParams(window.location.search);
+console.log(window.location.search);
+const searchTermFromUrl = urlParams.get('SearchTerm') || '';
+const typeFromUrl = urlParams.get('type') || 'all';
+const parkingFromUrl = urlParams.get('parking') === 'true';
+const furnishedFromUrl = urlParams.get('furnished') === 'true';
+const offerFromUrl = urlParams.get('offer') === 'true';
+const sortFromUrl = urlParams.get('sort') || 'createdAt';
+const orderFromUrl = urlParams.get('order') || 'desc';
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get('SearchTerm') || '';
-    const typeFromUrl = urlParams.get('type') || 'all';
-    const parkingFromUrl = urlParams.get('parking') === 'true';
-    const furnishedFromUrl = urlParams.get('furnished') === 'true';
-    const offerFromUrl = urlParams.get('offer') === 'true';
-    const sortFromUrl = urlParams.get('sort') || 'createdAt';
-    const orderFromUrl = urlParams.get('order') || 'desc';
+setSideBar({
+  SearchTerm: searchTermFromUrl,
+  type: typeFromUrl,
+  parking: parkingFromUrl,
+  furnished: furnishedFromUrl,
+  offer: offerFromUrl,
+  sort: sortFromUrl,
+  order: orderFromUrl,
+});
 
-    setSideBar({
-      SearchTerm: searchTermFromUrl,
-      type: typeFromUrl,
-      parking: parkingFromUrl,
-      furnished: furnishedFromUrl,
-      offer: offerFromUrl,
-      sort: sortFromUrl,
-      order: orderFromUrl,
-    });
+const fetchListing = async () => {
+  setLoading(true);
+  try {
+    const searchQuery = urlParams.toString();
+    console.log(searchQuery);
+    const res = await fetch(`${process.env.REACT_APP_ServerDomain}/listing/gets?${searchQuery}`)
 
-    const fetchListing = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${process.env.REACT_APP_ServerDomain}/listing/gets?${urlParams.toString()}`, {
-          credentials: 'include'
-        });
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
 
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
-        }
+    const data = await res.json();
+    setListings(data);
 
-        const data = await res.json();
-        setListings(data);
+    if (data.length === 0) {
+      console.log('No listings found.');
+    } else {
+      console.log('Listings found:', data);
+    }
+  } catch (error) {
+    console.error('Error fetching listing:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-        if (data.length === 0) {
-          console.log('No listings found.');
-        } else {
-          console.log('Listings found:', data);
-        }
-      } catch (error) {
-        console.error('Error fetching listing:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+fetchListing();
+}, [location.search]);
 
-    fetchListing();
-  }, [location.search]);
+const handleChange = (e) => {
+const { id, value, checked } = e.target;
+setSideBar((prev) => {
+  if (id === 'all' || id === 'rent' || id === 'sale') {
+    return { ...prev, type: id };
+  }
 
-  const handleChange = (e) => {
-    const { id, value, checked } = e.target;
-    setSideBar((prev) => {
-      if (id === 'all' || id === 'rent' || id === 'sale') {
-        return { ...prev, type: id };
-      }
+  if (id === 'parking' || id === 'furnished' || id === 'offer') {
+    return { ...prev, [id]: checked };
+  }
 
-      if (id === 'parking' || id === 'furnished' || id === 'offer') {
-        return { ...prev, [id]: checked };
-      }
+  if (id === 'sort_order') {
+    const [sort, order] = value.split('_');
+    return { ...prev, sort, order };
+  }
 
-      if (id === 'sort_order') {
-        const [sort, order] = value.split('_');
-        return { ...prev, sort, order };
-      }
+  return { ...prev, [id]: value };
+});
+};
 
-      return { ...prev, [id]: value };
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams();
-    Object.entries(sideBar).forEach(([key, value]) => {
-      urlParams.set(key, value);
-    });
-    navigate(`/search?${urlParams.toString()}`);
-
+const handleSubmit = (e) => {
+e.preventDefault();
+const urlParams = new URLSearchParams();
+Object.entries(sideBar).forEach(([key, value]) => {
+  urlParams.set(key, value);
+});
+console.log(`Navigate URL: /search?${urlParams.toString()}`);
+navigate(`/search?${urlParams.toString()}`);
         }
   return (
     <div className='flex flex-col md:flex-row'>

@@ -19,7 +19,7 @@ function Header() {
     navigate(`/search?${searchQuery}`)
   }
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
+    const urlParams = new URLSearchParams(window.location.search);
     // console.log('Original urlParams:', Array.from(urlParams.entries()));
 
     const params = Object.fromEntries(urlParams.entries());
