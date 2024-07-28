@@ -1,6 +1,7 @@
 // import { type } from '@testing-library/user-event/dist/type'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
+import ListingCard from '../component/ListingCard';
 
 function Search() {
 
@@ -67,7 +68,7 @@ const fetchListing = async () => {
 };
 
 fetchListing();
-}, [location.search]);
+}, [location.search,]);
 
 const handleChange = (e) => {
 const { id, value, checked } = e.target;
@@ -148,8 +149,21 @@ navigate(`/search?${urlParams.toString()}`);
                 <button className='bg-slate-700 text-white p-3 rounded-lg uppercase'>Search</button>
             </form>
         </div>
-        <div className="">
+        <div className="flex-1">
             <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing Results : </h1>
+            <div className="p-7 flex flex-wrap gap-4">
+              {!loading && listings.length === 0 && (
+                <p className='text-3xl text-slate-600'>No listing found</p>
+              )}
+              {loading && (
+                <p className='text-xl text-slate-600 text-center w-full'>Loading....</p>
+              )}
+              {
+                !loading && listings && listings.map((listing)=>(
+                  <ListingCard key={listing._id} listing={listing}/>
+                ))
+              }
+            </div>
         </div>
     </div>
   )
