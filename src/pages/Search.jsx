@@ -9,6 +9,8 @@ function Search() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
+
   console.log(listings);
   const [sideBar, setSideBar] = useState({
     SearchTerm:'',
@@ -53,6 +55,9 @@ const fetchListing = async () => {
     }
 
     const data = await res.json();
+    if(data.length > 6){
+      showMore(true)
+    }
     setListings(data);
 
     if (data.length === 0) {
@@ -99,6 +104,20 @@ Object.entries(sideBar).forEach(([key, value]) => {
 console.log(`Navigate URL: /search?${urlParams.toString()}`);
 navigate(`/search?${urlParams.toString()}`);
         }
+
+     const onShowmoreClick =async ()=>{
+      const numberOfListings = listings.length;
+      const startIndex = numberOfListings;
+      const urlParams = new URLSearchParams(location.search);
+      urlParams.set('startIndex', startIndex);
+      const searchQuery = urlParams.toString();
+      const res = await fetch(`${process.env.REACT_APP_ServerDomain}/listing/gets?${searchQuery}`)
+      const data = await res.json();
+      if (data.length < 9) {
+        setShowMore(false);
+      }
+      setListings([...listings, ...data]);
+     }   
   return (
     <div className='flex flex-col md:flex-row'>
         <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
@@ -162,6 +181,13 @@ navigate(`/search?${urlParams.toString()}`);
                 !loading && listings && listings.map((listing)=>(
                   <ListingCard key={listing._id} listing={listing}/>
                 ))
+              }
+              {
+                showMore && (
+                  <button className='text-green-600 hover:underline p-7' onClick={onShowmoreClick}>
+                      Show More
+                  </button>
+                )
               }
             </div>
         </div>
