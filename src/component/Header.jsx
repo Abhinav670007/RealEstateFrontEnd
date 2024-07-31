@@ -42,9 +42,14 @@ function Header() {
   return (
     <div className='bg-slate-300 '>
         <div className='flex items-center justify-between max-w-6xl p-3 mx-auto'>
-            <h1 className=''>MeDhuEstate</h1>
-            <form onSubmit={handleSubmit} className='bg-slate-200 p-2'>
-                <input onChange={(e)=> setSearchTerm(e.target.value)} type="text" placeholder='search...' className='bg-transparent focus:outline-none w-24 sm:w-64' value={searchTerm}/>
+            <Link to={'/'}>
+            <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
+            <span className='text-slate-500'>prime</span>
+            <span className='text-slate-700'>Properties</span>
+          </h1>
+            </Link>
+            <form onSubmit={handleSubmit} className='bg-slate-200 p-2 rounded-lg'>
+                <input onChange={(e)=> setSearchTerm(e.target.value)} type="text" placeholder='search...' className='bg-transparent focus:outline-none w-24 sm:w-64 ' value={searchTerm}/>
               <button>
                   <i class="fa-solid fa-magnifying-glass"></i>
               </button>

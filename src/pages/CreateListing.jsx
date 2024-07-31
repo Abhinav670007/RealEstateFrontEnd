@@ -136,7 +136,7 @@ const storeImage = async (file)=>{
 
   return (
     <main className='p-3 max-w-4xl mx-auto'>
-        <h1 className='text-3xl font-semibold text-center my-7'>Create a listing</h1>
+        <h1 className='text-3xl font-semibold text-center my-7 overflow-y-hidden'>Create a listing</h1>
         <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
             <div className='flex flex-col gap-4 flex-1'>
                 <input onChange={handleChange} value={formData.name} type="text" placeholder='name' className='border p-3 rounded-lg' id='name' maxLength={63} minLength={10} required />
@@ -174,7 +174,7 @@ const storeImage = async (file)=>{
                         <p>Baths</p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <input onChange={handleChange} value={formData.regularPrice} type="number"id='regularPrice' min={50} max={10000} required className='p-3 border border-gray-400 rounded-lg'/>
+                        <input onChange={handleChange} value={formData.regularPrice} type="number"id='regularPrice' min={50} max={700000} required className='p-3 border border-gray-400 rounded-lg'/>
                         <div className='flex flex-col items-center'>
                             <p>Regular price</p>
                             <span className='text-sm'>$ / month</span>

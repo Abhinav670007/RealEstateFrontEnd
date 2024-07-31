@@ -2,7 +2,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { app } from '../firebase'
-import { deleteUserFailure, deleteUserStart, deleteUserSuccess, updateUserError, updateUserStart, updateUserSuccess } from '../redux/userSlice'
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, updateUserError, updateUserStart, updateUserSuccess,signOutUserFailure,signOutUserStart,signOutUserSuccess } from '../redux/userSlice'
 import { Link } from 'react-router-dom'
 function Profile() {
 
@@ -72,7 +72,7 @@ console.log(userListing);
   const handleDeleteUser= async ()=>{
       try {
         dispatch(deleteUserStart())
-       const res = await fetch(`${process.env.REACT_APP_ServerDomain}/User/update/${currentUser._id}`,{
+       const res = await fetch(`${process.env.REACT_APP_ServerDomain}/User/delete/${currentUser._id}`,{
         method:"DELETE",
         credentials: 'include'
       })
@@ -82,7 +82,8 @@ console.log(userListing);
         return
       }
          dispatch(deleteUserSuccess(data))
-        
+         localStorage.removeItem('access_token')
+          
       } catch (error) {
         dispatch(deleteUserFailure(error.message))
       }
@@ -101,6 +102,7 @@ console.log(userListing);
         return
       }
       setUserListing(data)
+      window.scrollTo({top:"2300",behavior:"smooth"})
     } catch (error) {
       setListingError(true)
     }
@@ -122,10 +124,27 @@ console.log(userListing);
       console.log(error.message);
     }
   }
+  const handleSignOut =async ()=>{
+    try {
+      dispatch(signOutUserStart())
+      const res = await fetch(`${process.env.REACT_APP_ServerDomain}/User/signOut`)
+      const data = await res.json()
+      if(data === false){
+        dispatch(signOutUserFailure(data.message))
+        return
+      }
+      dispatch(deleteUserSuccess(data))
+      console.log(data);
+      localStorage.removeItem('access_token')
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
+
+    }
+  }
  
    return (
     <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
+      <h1 className='text-3xl font-semibold text-center my-7 overflow-y-hidden'>Profile</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input onChange={(e)=>setfile(e.target.files[0])} type="file" ref={fileRef} hidden accept='image/.*'/>
         <img src={formData.avatar || currentUser.avatar} onClick={()=>fileRef.current.click()} alt="profile" className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'/>
@@ -154,7 +173,7 @@ console.log(userListing);
         <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>
           Delete Account
         </span>
-        <span className='text-red-700 cursor-pointer'>
+        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
           Sign Out
         </span>
       </div>
@@ -167,11 +186,11 @@ console.log(userListing);
              <h1 className='text-center mt-7 text-2xl'>Your Listing</h1>
              { userListing.map((listing)=>(
                 <div key={listing._id} className="border rounded-lg p-3 flex justify-evenly items-center gap-4">
-                  <Link to={'/listing'}>
+                  <Link  to={`/listing/${listing._id}`}>
                   
                   <img className='h-16 w-16 object-contain' src={listing.imageUrls[0]} alt="cover" />
                   </Link >
-                  <Link className='text-slate-600 font-semibold hover:underline truncate flex-1' to={'/listing'}>
+                  <Link className='text-slate-600 font-semibold hover:underline truncate flex-1' to={`/listing/${listing._id}`}>
                     <p>{listing.name}</p>
                   </Link>
   

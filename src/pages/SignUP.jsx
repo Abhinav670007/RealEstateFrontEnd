@@ -28,7 +28,7 @@ function SignUP() {
     }
   return (
     <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7'>SignUP</h1>
+      <h1 className='text-3xl text-center font-semibold my-7 overflow-y-hidden pb-3'>SignUP</h1>
       <form className='flex flex-col gap-4' onSubmit={handlesubmit}>
         <input type="text" placeholder='username'className='border p-3 rounded-lg' onChange={(e)=>setSignUP({...Signup,username:e.target.value})}/>
         <input type="email" placeholder='email'className='border p-3 rounded-lg' onChange={(e)=>setSignUP({...Signup,email:e.target.value})}/>

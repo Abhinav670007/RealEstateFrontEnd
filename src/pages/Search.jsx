@@ -123,7 +123,7 @@ navigate(`/search?${urlParams.toString()}`);
         <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
             <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
               <div className="flex items-center gap-2">
-                <label className='whitespace-nowrap font-semibold'>Serach Term</label>
+                <label className='whitespace-nowrap font-semibold px-2'>Search </label>
                 <input value={sideBar.SearchTerm} onChange={(e)=>setSideBar({...sideBar,SearchTerm:e.target.value})} className='border rounded-lg p-3 w-full' type="text" id='searchTerm' placeholder='search....'/>
                 </div>  
                 <div className="flex gap-2 flex-wrap items-center">
@@ -172,7 +172,7 @@ navigate(`/search?${urlParams.toString()}`);
             <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing Results : </h1>
             <div className="p-7 flex flex-wrap gap-4">
               {!loading && listings.length === 0 && (
-                <p className='text-3xl text-slate-600'>No listing found</p>
+                <p className='text-3xl text-slate-600 overflow-y-hidden pb-1'>No listing found</p>
               )}
               {loading && (
                 <p className='text-xl text-slate-600 text-center w-full'>Loading....</p>

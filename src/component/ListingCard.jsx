@@ -5,7 +5,7 @@ import { MdLocationOn } from 'react-icons/md';
 function ListingCard({listing}) {
     console.log(listing);
   return (
-    <div className='bg-slate-600 shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]'>
+    <div className='bg-slate-400 shadow-md hover:bg-gradient-to-r from-neutral-50 to-neutral-300 transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]'>
 
       <Link  to={`/listing/${listing._id}`}>
           <img src={listing.imageUrls[0]} alt="cover" className='h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300'/>
@@ -22,7 +22,7 @@ function ListingCard({listing}) {
             <p className='text-sm text-black line-clamp-2'>
             {listing.description}
           </p>
-          <p className='text-red-600 mt-2 font-semibold '>
+          <p className='text-green-400 mt-2 font-semibold '>
             $
             {listing.offer
               ? listing.discountPrice.toLocaleString('en-US')
